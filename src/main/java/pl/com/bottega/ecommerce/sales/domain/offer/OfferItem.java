@@ -12,6 +12,9 @@
  */
 package pl.com.bottega.ecommerce.sales.domain.offer;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Objects;
@@ -19,15 +22,9 @@ import java.util.Objects;
 public class OfferItem {
 
     // product
-    private String productId;
+    private Product product;
 
     private BigDecimal productPrice;
-
-    private String productName;
-
-    private Date productSnapshotDate;
-
-    private String productType;
 
     private int quantity;
 
@@ -40,18 +37,13 @@ public class OfferItem {
 
     private BigDecimal discount;
 
-    public OfferItem(String productId, BigDecimal productPrice, String productName, Date productSnapshotDate, String productType,
-            int quantity) {
-        this(productId, productPrice, productName, productSnapshotDate, productType, quantity, null, null);
+    public OfferItem(Product product, BigDecimal productPrice, int quantity) {
+        this(product, productPrice, quantity, null, null);
     }
 
-    public OfferItem(String productId, BigDecimal productPrice, String productName, Date productSnapshotDate, String productType,
+    public OfferItem(Product product, BigDecimal productPrice,
             int quantity, BigDecimal discount, String discountCause) {
-        this.productId = productId;
-        this.productPrice = productPrice;
-        this.productName = productName;
-        this.productSnapshotDate = productSnapshotDate;
-        this.productType = productType;
+        this.product = product;
 
         this.quantity = quantity;
         this.discount = discount;
@@ -67,7 +59,7 @@ public class OfferItem {
     }
 
     public String getProductId() {
-        return productId;
+        return this.product.getProductId();
     }
 
     public BigDecimal getProductPrice() {
@@ -75,15 +67,15 @@ public class OfferItem {
     }
 
     public String getProductName() {
-        return productName;
+        return this.product.getProductName();
     }
 
     public Date getProductSnapshotDate() {
-        return productSnapshotDate;
+        return this.product.getProductSnapshotDate();
     }
 
     public String getProductType() {
-        return productType;
+        return this.product.getProductType();
     }
 
     public BigDecimal getTotalCost() {
@@ -108,8 +100,7 @@ public class OfferItem {
 
     @Override
     public int hashCode() {
-        return Objects.hash(currency, discount, discountCause, productId, productName, productPrice, productSnapshotDate, productType,
-                quantity, totalCost);
+        return Objects.hash(currency, discount, discountCause, product, productPrice, quantity, totalCost);
     }
 
     @Override
@@ -127,18 +118,15 @@ public class OfferItem {
         return Objects.equals(currency, other.currency)
                && Objects.equals(discount, other.discount)
                && Objects.equals(discountCause, other.discountCause)
-               && Objects.equals(productId, other.productId)
-               && Objects.equals(productName, other.productName)
+               && Objects.equals(product, other.product)
                && Objects.equals(productPrice, other.productPrice)
-               && Objects.equals(productSnapshotDate, other.productSnapshotDate)
-               && Objects.equals(productType, other.productType)
                && quantity == other.quantity
                && Objects.equals(totalCost, other.totalCost);
     }
 
     /**
      *
-     * @param item
+     * @param other
      * @param delta
      *            acceptable percentage difference
      * @return
@@ -151,26 +139,26 @@ public class OfferItem {
         } else if (!productPrice.equals(other.productPrice)) {
             return false;
         }
-        if (productName == null) {
-            if (other.productName != null) {
+        if (product.getProductName() == null) {
+            if (other.product.getProductName() != null) {
                 return false;
             }
-        } else if (!productName.equals(other.productName)) {
+        } else if (!product.getProductName().equals(other.product.getProductName())) {
             return false;
         }
 
-        if (productId == null) {
-            if (other.productId != null) {
+        if (product.getProductId() == null) {
+            if (other.product.getProductId() != null) {
                 return false;
             }
-        } else if (!productId.equals(other.productId)) {
+        } else if (!product.getProductId().equals(other.product.getProductId())) {
             return false;
         }
-        if (productType == null) {
-            if (other.productType != null) {
+        if (product.getProductType() == null) {
+            if (other.product.getProductType() != null) {
                 return false;
             }
-        } else if (!productType.equals(other.productType)) {
+        } else if (!product.getProductType().equals(other.product.getProductType())) {
             return false;
         }
 
