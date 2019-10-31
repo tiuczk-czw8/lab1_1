@@ -14,39 +14,30 @@ package pl.com.bottega.ecommerce.sales.domain.offer;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 public class OfferItem {
 
     // product
-    private String productId;
-
-    private BigDecimal productPrice;
-
-    private String productName;
-
-    private Date productSnapshotDate;
-
-    private String productType;
-
     private int quantity;
-
-    private BigDecimal totalCost;
-
-    private String currency;
-
     // discount
     private String discountCause;
 
-    private BigDecimal discount;
+    private Money discount;
+
+    private Money totalCost;
+
+    private List<Product> products;
+
 
     public OfferItem(String productId, BigDecimal productPrice, String productName, Date productSnapshotDate, String productType,
-            int quantity) {
+                     int quantity) {
         this(productId, productPrice, productName, productSnapshotDate, productType, quantity, null, null);
     }
 
     public OfferItem(String productId, BigDecimal productPrice, String productName, Date productSnapshotDate, String productType,
-            int quantity, BigDecimal discount, String discountCause) {
+                     int quantity, BigDecimal discount, String discountCause) {
         this.productId = productId;
         this.productPrice = productPrice;
         this.productName = productName;
@@ -63,7 +54,7 @@ public class OfferItem {
         }
 
         this.totalCost = productPrice.multiply(new BigDecimal(quantity))
-                                     .subtract(discountValue);
+                .subtract(discountValue);
     }
 
     public String getProductId() {
@@ -125,22 +116,20 @@ public class OfferItem {
         }
         OfferItem other = (OfferItem) obj;
         return Objects.equals(currency, other.currency)
-               && Objects.equals(discount, other.discount)
-               && Objects.equals(discountCause, other.discountCause)
-               && Objects.equals(productId, other.productId)
-               && Objects.equals(productName, other.productName)
-               && Objects.equals(productPrice, other.productPrice)
-               && Objects.equals(productSnapshotDate, other.productSnapshotDate)
-               && Objects.equals(productType, other.productType)
-               && quantity == other.quantity
-               && Objects.equals(totalCost, other.totalCost);
+                && Objects.equals(discount, other.discount)
+                && Objects.equals(discountCause, other.discountCause)
+                && Objects.equals(productId, other.productId)
+                && Objects.equals(productName, other.productName)
+                && Objects.equals(productPrice, other.productPrice)
+                && Objects.equals(productSnapshotDate, other.productSnapshotDate)
+                && Objects.equals(productType, other.productType)
+                && quantity == other.quantity
+                && Objects.equals(totalCost, other.totalCost);
     }
 
     /**
-     *
      * @param item
-     * @param delta
-     *            acceptable percentage difference
+     * @param delta acceptable percentage difference
      * @return
      */
     public boolean sameAs(OfferItem other, double delta) {
