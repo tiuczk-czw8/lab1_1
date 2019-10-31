@@ -31,13 +31,15 @@ public class OfferItem {
     // discount
     private Money discount;
 
+    private String discountCause;
+
     public OfferItem(Product product,
             int quantity) {
-        this(product, quantity, null);
+        this(product, quantity, null, null);
     }
 
     public OfferItem(Product product,
-            int quantity, Money discount) {
+            int quantity, Money discount, String discountCause) {
         this.product = product;
 
         this.quantity = quantity;
@@ -66,9 +68,11 @@ public class OfferItem {
         return quantity;
     }
 
+    public String getDiscountCause() {return discountCause;}
+
     @Override
     public int hashCode() {
-        return Objects.hash( discount,  product, quantity, totalCost);
+        return Objects.hash( discount,discountCause, product, quantity, totalCost);
     }
 
     @Override
@@ -85,6 +89,7 @@ public class OfferItem {
         OfferItem other = (OfferItem) obj;
         return Objects.equals(totalCost, other.totalCost)
                && Objects.equals(discount, other.discount)
+                && Objects.equals(discountCause, other.discountCause)
                && Objects.equals(product, other.product)
                && quantity == other.quantity
                && Objects.equals(totalCost, other.totalCost);
@@ -134,7 +139,7 @@ public class OfferItem {
 
         BigDecimal max;
         BigDecimal min;
-        if (totalCost.compareTo(other.totalCost) > 0) {
+        if (totalCost.getValue().compareTo(other.totalCost.getValue()) > 0) {
             max = totalCost;
             min = other.totalCost;
         } else {
