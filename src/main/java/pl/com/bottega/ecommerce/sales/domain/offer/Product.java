@@ -5,7 +5,6 @@ import java.util.Date;
 
 public class Product {
 
-
     private String productId;
 
     private Money productPrice;
@@ -18,6 +17,14 @@ public class Product {
 
     public String getProductId() {
         return productId;
+    }
+
+    public Product(String productId, Money productPrice, String productName, Date productSnapshotDate, String productType) {
+        this.productId = productId;
+        this.productPrice = productPrice;
+        this.productName = productName;
+        this.productSnapshotDate = productSnapshotDate;
+        this.productType = productType;
     }
 
     public Money getProductPrice() {

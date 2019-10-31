@@ -83,14 +83,9 @@ public class OfferItem {
             return false;
         }
         OfferItem other = (OfferItem) obj;
-        return Objects.equals(currency, other.currency)
+        return Objects.equals(totalCost, other.totalCost)
                && Objects.equals(discount, other.discount)
-               && Objects.equals(discountCause, other.discountCause)
-               && Objects.equals(productId, other.productId)
-               && Objects.equals(productName, other.productName)
-               && Objects.equals(productPrice, other.productPrice)
-               && Objects.equals(productSnapshotDate, other.productSnapshotDate)
-               && Objects.equals(productType, other.productType)
+               && Objects.equals(product, other.product)
                && quantity == other.quantity
                && Objects.equals(totalCost, other.totalCost);
     }
