@@ -4,15 +4,22 @@ import java.math.BigDecimal;
 
 public class Money {
 
-    public BigDecimal getTotalCost() {
-        return totalCost;
+
+
+    private BigDecimal value;
+
+    private String currency;
+
+
+    public BigDecimal getValue() {
+        return value;
     }
 
     public String getCurrency() {
         return currency;
     }
 
-    private BigDecimal totalCost;
-
-    private String currency;
+    public void setValue(BigDecimal value) {
+        this.value = value;
+    }
 }
