@@ -3,15 +3,15 @@ package pl.com.bottega.ecommerce.sales.domain.offer;
 import java.math.BigDecimal;
 
 public class Money {
-    private BigDecimal value;
+    private BigDecimal productPrice;
     private String currency;
 
-    public BigDecimal getValue() {
-        return value;
+    public BigDecimal getProductPrice() {
+        return productPrice;
     }
 
-    public void setValue(BigDecimal value) {
-        this.value = value;
+    public void setProductPrice(BigDecimal productPrice) {
+        this.productPrice = productPrice;
     }
 
     public String getCurrency() {
