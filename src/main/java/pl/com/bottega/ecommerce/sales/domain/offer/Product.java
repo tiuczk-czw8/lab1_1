@@ -7,7 +7,24 @@ public class Product {
     private String productName;
     private String productType;
     private String productId;
+    private Date snapshotDate;
+    private BigDecimal productPrice;
 
+    public BigDecimal getProductPrice() {
+        return productPrice;
+    }
+
+    public void setProductPrice(BigDecimal productPrice) {
+        this.productPrice = productPrice;
+    }
+
+    public Date getSnapshotDate() {
+        return snapshotDate;
+    }
+
+    public void setSnapshotDate(Date snapshotDate) {
+        this.snapshotDate = snapshotDate;
+    }
 
     public String getProductId() {
         return productId;
