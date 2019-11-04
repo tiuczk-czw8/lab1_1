@@ -1,16 +1,18 @@
 package pl.com.bottega.ecommerce.sales.domain.offer;
 
-import java.util.ArrayList;
 import java.util.List;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class Offer {
 
-    private List<OfferItem> availableItems = new ArrayList<OfferItem>();
+    private List<OfferItem> availableItems;
+    private List<OfferItem> unavailableItems;
 
-    private List<OfferItem> unavailableItems = new ArrayList<OfferItem>();
-
-    public Offer(List<OfferItem> availabeItems, List<OfferItem> unavailableItems) {
-        this.availableItems = availabeItems;
+    @Contract(pure = true)
+    public Offer(List<OfferItem> availableItems, List<OfferItem> unavailableItems) {
+        this.availableItems = availableItems;
         this.unavailableItems = unavailableItems;
     }
 
@@ -30,6 +32,7 @@ public class Offer {
         return result;
     }
 
+    @Contract(value = "null -> false", pure = true)
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
@@ -52,24 +55,21 @@ public class Offer {
         return true;
     }
 
-    /**
-     *
-     * @param seenOffer
-     * @param delta
-     *            acceptable difference in percent
-     * @return
-     */
-    public boolean sameAs(Offer seenOffer, double delta) {
-        if (availableItems.size() != seenOffer.availableItems.size()) {
+    public boolean sameAs(@NotNull Offer seenOffer, double acceptableDifferenceInPercent) {
+        if (availableItems.size() != seenOffer.getAvailableItems()
+                                              .size()) {
             return false;
         }
 
         for (OfferItem item : availableItems) {
-            OfferItem sameItem = seenOffer.findItem(item.getProductId());
+            OfferItem sameItem = seenOffer.findItem(item.getProduct()
+                                                        .getId());
+
             if (sameItem == null) {
                 return false;
             }
-            if (!sameItem.sameAs(item, delta)) {
+
+            if (!sameItem.sameAs(item, acceptableDifferenceInPercent)) {
                 return false;
             }
         }
@@ -77,13 +77,16 @@ public class Offer {
         return true;
     }
 
+    @Nullable
     private OfferItem findItem(String productId) {
         for (OfferItem item : availableItems) {
-            if (item.getProductId().equals(productId)) {
+            if (item.getProduct()
+                    .getId()
+                    .equals(productId)) {
                 return item;
             }
         }
+
         return null;
     }
-
 }
