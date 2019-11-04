@@ -24,26 +24,21 @@ public class OfferItem {
     private Money totalCost;
     private Money discount;
 
-    public OfferItem(Product product, int quantity) {
-        this(product, quantity, null, null);
-    }
-
-    private OfferItem(Product product, int quantity, Money totalCost, Money discount) {
+    private OfferItem(@NotNull Product product, int quantity, @NotNull Money discount) {
         this.product = product;
         this.quantity = quantity;
-        this.totalCost = totalCost;
         this.discount = discount;
+        computeTotalCost();
+    }
 
-        final String CURRENCY = "CNY";
-        Money discountValue = new Money(new BigDecimal(0), CURRENCY);
-
-        if (discount != null && !discount.isNullable()) {
-            discountValue.add(discount);
-        }
-
-        Money bigQuantity = new Money(new BigDecimal(quantity), CURRENCY);
+    private void computeTotalCost() {
+        Money bigQuantity = new Money(new BigDecimal(quantity), discount.getCurrency());
+        this.totalCost = new Money(new BigDecimal(0), discount.getCurrency());
         this.totalCost.multiply(bigQuantity);
-        this.totalCost.subtract(discountValue);
+
+        if (!discount.isNullable()) {
+            this.totalCost.subtract(discount);
+        }
     }
 
     @Contract(pure = true)
