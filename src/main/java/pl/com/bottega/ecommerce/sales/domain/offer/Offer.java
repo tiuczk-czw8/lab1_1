@@ -8,28 +8,21 @@ import org.jetbrains.annotations.Nullable;
 public class Offer {
 
     private List<OfferItem> availableItems;
-    private List<OfferItem> unavailableItems;
 
     @Contract(pure = true)
-    public Offer(List<OfferItem> availableItems, List<OfferItem> unavailableItems) {
+    public Offer(List<OfferItem> availableItems) {
         this.availableItems = availableItems;
-        this.unavailableItems = unavailableItems;
     }
 
-    public List<OfferItem> getAvailableItems() {
+    @Contract(pure = true)
+    private List<OfferItem> getAvailableItems() {
         return availableItems;
-    }
-
-    public List<OfferItem> getUnavailableItems() {
-        return unavailableItems;
     }
 
     @Override
     public int hashCode() {
         final int prime = 31;
-        int result = 1;
-        result = prime * result + (availableItems == null ? 0 : availableItems.hashCode());
-        return result;
+        return prime + (availableItems == null ? 0 : availableItems.hashCode());
     }
 
     @Contract(value = "null -> false", pure = true)
@@ -38,21 +31,22 @@ public class Offer {
         if (this == obj) {
             return true;
         }
+
         if (obj == null) {
             return false;
         }
+
         if (getClass() != obj.getClass()) {
             return false;
         }
+
         Offer other = (Offer) obj;
-        if (availableItems == null) {
-            if (other.availableItems != null) {
-                return false;
-            }
-        } else if (!availableItems.equals(other.availableItems)) {
+
+        if (availableItems == null || other.getAvailableItems() == null) {
             return false;
         }
-        return true;
+
+        return availableItems.equals(other.getAvailableItems());
     }
 
     public boolean sameAs(@NotNull Offer seenOffer, double acceptableDifferenceInPercent) {
@@ -62,8 +56,13 @@ public class Offer {
         }
 
         for (OfferItem item : availableItems) {
-            OfferItem sameItem = seenOffer.findItem(item.getProduct()
-                                                        .getId());
+            Product sameProduct = item.getProduct();
+
+            if (sameProduct == null) {
+                return false;
+            }
+
+            OfferItem sameItem = seenOffer.findItem(sameProduct.getId());
 
             if (sameItem == null) {
                 return false;
