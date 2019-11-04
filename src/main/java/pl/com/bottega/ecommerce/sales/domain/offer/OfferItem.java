@@ -19,33 +19,31 @@ import org.jetbrains.annotations.NotNull;
 
 public class OfferItem {
 
-    // product
     private Product product;
-
     private int quantity;
-    private BigDecimal totalCost;
-    private String currency;
-    // discount
-    private String discountCause;
-    private BigDecimal discount;
+    private Money totalCost;
+    private Money discount;
 
     public OfferItem(Product product, int quantity) {
         this(product, quantity, null, null);
     }
 
-    private OfferItem(Product product, int quantity, BigDecimal discount, String discountCause) {
+    private OfferItem(Product product, int quantity, Money totalCost, Money discount) {
         this.product = product;
         this.quantity = quantity;
+        this.totalCost = totalCost;
         this.discount = discount;
-        this.discountCause = discountCause;
 
-        BigDecimal discountValue = new BigDecimal(0);
-        if (discount != null) {
-            discountValue = discountValue.add(discount);
+        final String CURRENCY = "CNY";
+        Money discountValue = new Money(new BigDecimal(0), CURRENCY);
+
+        if (discount != null && !discount.isNullable()) {
+            discountValue.add(discount);
         }
 
-        // this.totalCost = productPrice.multiply(new BigDecimal(quantity)).subtract(discountValue);
-        // TODO: count productPrice using price := Money
+        Money bigQuantity = new Money(new BigDecimal(quantity), CURRENCY);
+        this.totalCost.multiply(bigQuantity);
+        this.totalCost.subtract(discountValue);
     }
 
     @Contract(pure = true)
@@ -54,23 +52,13 @@ public class OfferItem {
     }
 
     @Contract(pure = true)
-    private BigDecimal getTotalCost() {
+    private Money getTotalCost() {
         return totalCost;
     }
 
     @Contract(pure = true)
-    private String getTotalCostCurrency() {
-        return currency;
-    }
-
-    @Contract(pure = true)
-    private BigDecimal getDiscount() {
+    private Money getDiscount() {
         return discount;
-    }
-
-    @Contract(pure = true)
-    private String getDiscountCause() {
-        return discountCause;
     }
 
     @Contract(pure = true)
@@ -80,27 +68,30 @@ public class OfferItem {
 
     @Override
     public int hashCode() {
-        return Objects.hash(currency, discount, discountCause, quantity, totalCost);
+        return Objects.hash(product, quantity, totalCost, discount);
     }
 
+    @Contract(value = "null -> false", pure = true)
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
             return true;
         }
+
         if (obj == null) {
             return false;
         }
+
         if (getClass() != obj.getClass()) {
             return false;
         }
+
         OfferItem other = (OfferItem) obj;
-        return Objects.equals(currency, other.getTotalCostCurrency())
-               && Objects.equals(discount, other.getDiscount())
-               && Objects.equals(discountCause, other.getDiscountCause())
-               && Objects.equals(product, other.getProduct())
-               && quantity == other.getQuantity()
-               && Objects.equals(totalCost, other.getTotalCost());
+
+        return Objects.equals(product, other.getProduct())
+               && Objects.equals(quantity, other.getQuantity())
+               && Objects.equals(totalCost, other.getTotalCost())
+               && Objects.equals(discount, other.getDiscount());
     }
 
     boolean sameAs(@NotNull OfferItem other, double acceptablePercentageDifference) {
@@ -112,19 +103,19 @@ public class OfferItem {
             return false;
         }
 
-        BigDecimal max;
-        BigDecimal min;
+        Money max = other.getTotalCost();
+        Money min = totalCost;
 
-        if (totalCost.compareTo(other.totalCost) > 0) {
+        if (totalCost.compareTo(other.getTotalCost()) > 0) {
             max = totalCost;
-            min = other.totalCost;
-        } else {
-            max = other.totalCost;
-            min = totalCost;
+            min = other.getTotalCost();
         }
 
-        BigDecimal difference = max.subtract(min);
-        BigDecimal acceptableDelta = max.multiply(BigDecimal.valueOf(acceptablePercentageDifference / 100));
+        Money difference = new Money(max.getValue(), max.getCurrency());
+        difference.subtract(min);
+        Money acceptableDelta = new Money(max.getValue(), max.getCurrency());
+        Money multiplicand = new Money(BigDecimal.valueOf(acceptablePercentageDifference / 100), max.getCurrency());
+        acceptableDelta.multiply(multiplicand);
         return acceptableDelta.compareTo(difference) > 0;
     }
 }

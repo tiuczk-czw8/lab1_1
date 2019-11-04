@@ -3,31 +3,39 @@ package pl.com.bottega.ecommerce.sales.domain.offer;
 class Product {
 
     private String id;
-    // TODO: uses price := Money
+    private Money price;
     private String name;
     private String type;
 
-    public String getId() {
+    String getId() {
         return id;
     }
 
-    public void setId(String id) {
+    void setId(String id) {
         this.id = id;
     }
 
-    public String getName() {
+    Money getPrice() {
+        return price;
+    }
+
+    void setPrice(Money price) {
+        this.price = price;
+    }
+
+    String getName() {
         return name;
     }
 
-    public void setName(String name) {
+    void setName(String name) {
         this.name = name;
     }
 
-    public String getType() {
+    String getType() {
         return type;
     }
 
-    public void setType(String type) {
+    void setType(String type) {
         this.type = type;
     }
 
@@ -36,32 +44,30 @@ class Product {
             return false;
         }
 
-        if (!this.id.equals(other.id)) {
+        if (!this.id.equals(other.getId())) {
             return false;
         }
 
-        // TODO: provide price:=Money
-        // if (this.price == null || other.price == null) {
-        // return false;
-        // }
-
-        // TODO: provide comparer for price:=Money
-        // if (!this.price.equals(other.price)) {
-        // return false;
-        // }
-
-        if (this.name == null || other.name == null) {
+        if (this.price == null || other.getPrice() == null) {
             return false;
         }
 
-        if (!this.name.equals(other.name)) {
+        if (!this.price.equals(other.getPrice())) {
             return false;
         }
 
-        if (this.type == null || other.type == null) {
+        if (this.name == null || other.getName() == null) {
             return false;
         }
 
-        return this.type.equals(other.type);
+        if (!this.name.equals(other.getName())) {
+            return false;
+        }
+
+        if (this.type == null || other.getType() == null) {
+            return false;
+        }
+
+        return this.type.equals(other.getType());
     }
 }
