@@ -10,10 +10,9 @@ final class Money {
     private BigDecimal value;
     private String currency;
 
-    @Contract(pure = true)
     Money(BigDecimal value, String currency) {
-        this.value = value;
-        this.currency = currency;
+        setValue(value);
+        setCurrency(currency);
     }
 
     @Contract(pure = true)
@@ -26,11 +25,11 @@ final class Money {
         return currency;
     }
 
-    void setValue(BigDecimal value) {
+    private void setValue(BigDecimal value) {
         this.value = value;
     }
 
-    void setCurrency(String currency) {
+    private void setCurrency(String currency) {
         this.currency = currency;
     }
 
@@ -56,10 +55,6 @@ final class Money {
 
         Money other = (Money) obj;
         return Objects.equals(value, other.getValue()) && Objects.equals(currency, other.getCurrency());
-    }
-
-    void add(@NotNull Money augend) {
-        setValue(value.add(augend.getValue()));
     }
 
     void subtract(@NotNull Money subtrahend) {

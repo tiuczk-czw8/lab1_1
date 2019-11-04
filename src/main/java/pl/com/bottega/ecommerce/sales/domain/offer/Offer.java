@@ -49,7 +49,7 @@ public class Offer {
         return availableItems.equals(other.getAvailableItems());
     }
 
-    public boolean sameAs(@NotNull Offer seenOffer, double acceptableDifferenceInPercent) {
+    boolean sameAs(@NotNull Offer seenOffer, double acceptableDifferenceInPercent) {
         if (availableItems.size() != seenOffer.getAvailableItems()
                                               .size()) {
             return false;

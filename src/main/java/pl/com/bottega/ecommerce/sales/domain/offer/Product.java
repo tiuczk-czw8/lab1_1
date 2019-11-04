@@ -1,5 +1,7 @@
 package pl.com.bottega.ecommerce.sales.domain.offer;
 
+import org.jetbrains.annotations.Contract;
+
 class Product {
 
     private String id;
@@ -7,36 +9,46 @@ class Product {
     private String name;
     private String type;
 
+    Product(String id, Money price, String name, String type) {
+        setId(id);
+        setPrice(price);
+        setName(name);
+        setType(type);
+    }
+
+    private void setId(String id) {
+        this.id = id;
+    }
+
+    private void setPrice(Money price) {
+        this.price = price;
+    }
+
+    private void setName(String name) {
+        this.name = name;
+    }
+
+    private void setType(String type) {
+        this.type = type;
+    }
+
     String getId() {
         return id;
     }
 
-    void setId(String id) {
-        this.id = id;
-    }
-
-    Money getPrice() {
+    @Contract(pure = true)
+    private Money getPrice() {
         return price;
     }
 
-    void setPrice(Money price) {
-        this.price = price;
-    }
-
-    String getName() {
+    @Contract(pure = true)
+    private String getName() {
         return name;
     }
 
-    void setName(String name) {
-        this.name = name;
-    }
-
-    String getType() {
+    @Contract(pure = true)
+    private String getType() {
         return type;
-    }
-
-    void setType(String type) {
-        this.type = type;
     }
 
     boolean sameAs(Product other) {
