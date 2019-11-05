@@ -14,10 +14,6 @@ public class Product {
 
     private String productType;
 
-    public String getProductId() {
-        return productId;
-    }
-
     public Product(String productId, Money productPrice, String productName, Date productSnapshotDate, String productType) {
         this.productId = productId;
         this.productPrice = productPrice;
@@ -25,6 +21,11 @@ public class Product {
         this.productSnapshotDate = productSnapshotDate;
         this.productType = productType;
     }
+    
+    public String getProductId() {
+        return productId;
+    }
+    
 
     public Money getProductPrice() {
         return productPrice;
@@ -40,5 +41,9 @@ public class Product {
 
     public String getProductType() {
         return productType;
+    }
+    
+    public void setProductType(String productType) {
+        this.productType = productType;
     }
 }

@@ -65,7 +65,7 @@ public class OfferItem {
 
     public String getDiscountCause() {
     	return discountCause;
-    }
+    	}
 
     @Override
     public int hashCode() {
