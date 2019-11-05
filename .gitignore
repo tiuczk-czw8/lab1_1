@@ -3,3 +3,5 @@
 /.classpath
 /.project
 /.idea
+/.scannerwork
+sonar-project.properties

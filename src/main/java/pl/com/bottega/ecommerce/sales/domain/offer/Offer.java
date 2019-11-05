@@ -49,7 +49,7 @@ public class Offer {
         return availableItems.equals(other.getAvailableItems());
     }
 
-    boolean sameAs(@NotNull Offer seenOffer, double acceptableDifferenceInPercent) {
+    public boolean sameAs(@NotNull Offer seenOffer, double acceptableDifferenceInPercent) {
         if (availableItems.size() != seenOffer.getAvailableItems()
                                               .size()) {
             return false;
@@ -62,6 +62,7 @@ public class Offer {
                 return false;
             }
 
+            // Products must have distinct IDs to be recognizable.
             OfferItem sameItem = seenOffer.findItem(sameProduct.getId());
 
             if (sameItem == null) {

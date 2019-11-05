@@ -5,12 +5,12 @@ import java.util.Objects;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-final class Money {
+public final class Money {
 
     private BigDecimal value;
     private String currency;
 
-    Money(BigDecimal value, String currency) {
+    public Money(BigDecimal value, String currency) {
         setValue(value);
         setCurrency(currency);
     }

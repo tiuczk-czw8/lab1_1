@@ -24,7 +24,7 @@ public class OfferItem {
     private Money totalCost;
     private Money discount;
 
-    private OfferItem(@NotNull Product product, int quantity, @NotNull Money discount) {
+    public OfferItem(@NotNull Product product, int quantity, @NotNull Money discount) {
         this.product = product;
         this.quantity = quantity;
         this.discount = discount;
@@ -33,7 +33,7 @@ public class OfferItem {
 
     private void computeTotalCost() {
         Money bigQuantity = new Money(new BigDecimal(quantity), discount.getCurrency());
-        this.totalCost = new Money(new BigDecimal(0), discount.getCurrency());
+        this.totalCost = new Money(product.getPrice().getValue(), discount.getCurrency());
         this.totalCost.multiply(bigQuantity);
 
         if (!discount.isNullable()) {
@@ -111,6 +111,6 @@ public class OfferItem {
         Money acceptableDelta = new Money(max.getValue(), max.getCurrency());
         Money multiplicand = new Money(BigDecimal.valueOf(acceptablePercentageDifference / 100), max.getCurrency());
         acceptableDelta.multiply(multiplicand);
-        return acceptableDelta.compareTo(difference) > 0;
+        return acceptableDelta.compareTo(difference) >= 0;
     }
 }

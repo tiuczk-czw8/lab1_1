@@ -2,14 +2,14 @@ package pl.com.bottega.ecommerce.sales.domain.offer;
 
 import org.jetbrains.annotations.Contract;
 
-class Product {
+public class Product {
 
     private String id;
     private Money price;
     private String name;
     private String type;
 
-    Product(String id, Money price, String name, String type) {
+    public Product(String id, Money price, String name, String type) {
         setId(id);
         setPrice(price);
         setName(name);
@@ -37,17 +37,17 @@ class Product {
     }
 
     @Contract(pure = true)
-    private Money getPrice() {
+    Money getPrice() {
         return price;
     }
 
     @Contract(pure = true)
-    private String getName() {
+    public String getName() {
         return name;
     }
 
     @Contract(pure = true)
-    private String getType() {
+    public String getType() {
         return type;
     }
 
