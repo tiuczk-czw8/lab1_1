@@ -17,15 +17,12 @@ import java.util.Objects;
 
 public class OfferItem {
 
-    // product
     private Product product;
 
     private int quantity;
 
     private Money totalCost;
 
-
-    // discount
     private Money discount;
 
     private String discountCause;
@@ -38,7 +35,6 @@ public class OfferItem {
     public OfferItem(Product product,
             int quantity, Money discount, String discountCause) {
         this.product = product;
-
         this.quantity = quantity;
         this.discount = discount;
         BigDecimal discountValue = new BigDecimal(0);
@@ -51,7 +47,9 @@ public class OfferItem {
     }
 
 
-    public Product getProduct() { return product; }
+    public Product getProduct() { 
+    	return product; 
+    }
 
     public Money getTotalCost() {
         return totalCost;
@@ -65,7 +63,9 @@ public class OfferItem {
         return quantity;
     }
 
-    public String getDiscountCause() {return discountCause;}
+    public String getDiscountCause() {
+    	return discountCause;
+    }
 
     @Override
     public int hashCode() {
