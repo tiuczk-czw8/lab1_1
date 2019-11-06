@@ -18,28 +18,26 @@ import java.util.Objects;
 
 public class OfferItem {
 
-    Product product;
+    private Product product;
 
     private int quantity;
 
-    private BigDecimal totalCost;
+    private Money totalCost;
 
-    private String currency;
+    private Money discount;
 
-    // discount
     private String discountCause;
 
-    private BigDecimal discount;
 
-    public OfferItem(Product product, int quantity) {
-        this(product, quantity, null, null);
+    public OfferItem(Product product, int quantity, String currency) {
+        this(product, quantity, null, null, currency);
     }
 
-    public OfferItem(Product product, int quantity, BigDecimal discount, String discountCause) {
+    public OfferItem(Product product, int quantity, BigDecimal discount, String discountCause, String currency) {
 
         this.product = product;
         this.quantity = quantity;
-        this.discount = discount;
+        this.discount = new Money(discount, currency)
         this.discountCause = discountCause;
 
         BigDecimal discountValue = new BigDecimal(0);
@@ -47,23 +45,19 @@ public class OfferItem {
             discountValue = discountValue.add(discount);
         }
 
-        this.totalCost = product.getProductPrice().multiply(new BigDecimal(quantity)).subtract(discountValue);
+        this.totalCost = new Money(product.getProductPrice().multiply(new BigDecimal(quantity)).subtract(discountValue), currency);
     }
 
-    public String getProductId() {
+    public Product getProduct() {
         return product;
     }
 
     public BigDecimal getTotalCost() {
-        return totalCost;
-    }
-
-    public String getTotalCostCurrency() {
-        return currency;
+        return totalCost.getValue();
     }
 
     public BigDecimal getDiscount() {
-        return discount;
+        return discount.getValue();
     }
 
     public String getDiscountCause() {
@@ -76,7 +70,7 @@ public class OfferItem {
 
     @Override
     public int hashCode() {
-        return Objects.hash(currency, discount, discountCause, product, quantity, totalCost);
+        return Objects.hash(discount, discountCause, product, quantity, totalCost);
     }
 
     @Override
@@ -91,8 +85,7 @@ public class OfferItem {
             return false;
         }
         OfferItem other = (OfferItem) obj;
-        return Objects.equals(currency, other.currency)
-               && Objects.equals(discount, other.discount)
+        return Objects.equals(discount, other.discount)
                && Objects.equals(discountCause, other.discountCause)
                && Objects.equals(product, other.product)
                && quantity == other.quantity
@@ -101,13 +94,13 @@ public class OfferItem {
 
     /**
      *
-     * @param item
+     * @param other
      * @param delta acceptable percentage difference
      * @return
      */
     public boolean sameAs(OfferItem other, double delta) {
 
-        if (product != other.product) {
+        if (product.sameAs(other.product, delta)) {
             return false;
         }
 
@@ -115,20 +108,11 @@ public class OfferItem {
             return false;
         }
 
-        BigDecimal max;
-        BigDecimal min;
-        if (totalCost.compareTo(other.totalCost) > 0) {
-            max = totalCost;
-            min = other.totalCost;
-        } else {
-            max = other.totalCost;
-            min = totalCost;
+        if (!totalCost.sameAs(other.totalCost, delta)) {
+            return false;
         }
 
-        BigDecimal difference = max.subtract(min);
-        BigDecimal acceptableDelta = max.multiply(BigDecimal.valueOf(delta / 100));
-
-        return acceptableDelta.compareTo(difference) > 0;
+        return true;
     }
 
 }
