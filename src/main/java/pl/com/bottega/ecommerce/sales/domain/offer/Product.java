@@ -22,7 +22,7 @@ public class Product {
         this.productType = productType;
         this.price = price;
     }
-    
+
     public String getProductId() {
         return productId;
     }
@@ -80,4 +80,36 @@ public class Product {
         return Objects.hash(productId, productName, productSnapshotDate, productType, price);
     }
 
+    public boolean sameAs(Product other, double delta) {
+        if (price == null) {
+            if (other.price != null) {
+                return false;
+            }
+        } else if (!price.equals(other.price)) {
+            return false;
+        }
+        if (productName == null) {
+            if (other.productName != null) {
+                return false;
+            }
+        } else if (!productName.equals(other.productName)) {
+            return false;
+        }
+
+        if (productId == null) {
+            if (other.productId != null) {
+                return false;
+            }
+        } else if (!productId.equals(other.productId)) {
+            return false;
+        }
+        if (productType == null) {
+            if (other.productType != null) {
+                return false;
+            }
+        } else if (!productType.equals(other.productType)) {
+            return false;
+        }
+        return true;
+    }
 }
