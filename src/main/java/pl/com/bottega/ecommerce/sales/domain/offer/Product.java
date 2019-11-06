@@ -26,7 +26,6 @@ public class Product {
         return productId;
     }
     
-
     public Money getProductPrice() {
         return productPrice;
     }

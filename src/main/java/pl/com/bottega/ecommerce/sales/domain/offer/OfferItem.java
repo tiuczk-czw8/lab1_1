@@ -46,7 +46,6 @@ public class OfferItem {
                 .subtract(discountValue));
     }
 
-
     public Product getProduct() { 
     	return product; 
     }
