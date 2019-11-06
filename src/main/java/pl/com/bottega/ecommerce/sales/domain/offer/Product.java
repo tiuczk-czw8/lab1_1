@@ -8,7 +8,7 @@ public class Product {
 
     private String productId;
 
-    private BigDecimal productPrice;
+    private Money productPrice;
 
     private String productName;
 
@@ -16,10 +16,10 @@ public class Product {
 
     private String productType;
 
-    Product(String productId, BigDecimal productPrice, String productName, Date productSnapshotDate, String productType){
+    Product(String productId, BigDecimal productPrice, String currency, String productName, Date productSnapshotDate, String productType){
         this.productName=productName;
         this.productId=productId;
-        this.productPrice=productPrice;
+        this.productPrice=new Money(productPrice,currency);
         this.productSnapshotDate=productSnapshotDate;
         this.productType=productType;
 
@@ -30,7 +30,7 @@ public class Product {
     }
 
     public BigDecimal getProductPrice() {
-        return productPrice;
+        return productPrice.getValue();
     }
 
     public String getProductName() {
