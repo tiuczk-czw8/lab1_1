@@ -1,75 +1,75 @@
 package pl.com.bottega.ecommerce.sales.domain.offer;
 
-import java.util.ArrayList;
 import java.util.List;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class Offer {
 
-    private List<OfferItem> availableItems = new ArrayList<OfferItem>();
+    private List<OfferItem> availableItems;
 
-    private List<OfferItem> unavailableItems = new ArrayList<OfferItem>();
-
-    public Offer(List<OfferItem> availabeItems, List<OfferItem> unavailableItems) {
-        this.availableItems = availabeItems;
-        this.unavailableItems = unavailableItems;
+    @Contract(pure = true)
+    public Offer(List<OfferItem> availableItems) {
+        this.availableItems = availableItems;
     }
 
-    public List<OfferItem> getAvailableItems() {
+    @Contract(pure = true)
+    private List<OfferItem> getAvailableItems() {
         return availableItems;
-    }
-
-    public List<OfferItem> getUnavailableItems() {
-        return unavailableItems;
     }
 
     @Override
     public int hashCode() {
         final int prime = 31;
-        int result = 1;
-        result = prime * result + (availableItems == null ? 0 : availableItems.hashCode());
-        return result;
+        return prime + (availableItems == null ? 0 : availableItems.hashCode());
     }
 
+    @Contract(value = "null -> false", pure = true)
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
             return true;
         }
+
         if (obj == null) {
             return false;
         }
+
         if (getClass() != obj.getClass()) {
             return false;
         }
+
         Offer other = (Offer) obj;
-        if (availableItems == null) {
-            if (other.availableItems != null) {
-                return false;
-            }
-        } else if (!availableItems.equals(other.availableItems)) {
+
+        if (availableItems == null || other.getAvailableItems() == null) {
             return false;
         }
-        return true;
+
+        return availableItems.equals(other.getAvailableItems());
     }
 
-    /**
-     *
-     * @param seenOffer
-     * @param delta
-     *            acceptable difference in percent
-     * @return
-     */
-    public boolean sameAs(Offer seenOffer, double delta) {
-        if (availableItems.size() != seenOffer.availableItems.size()) {
+    public boolean sameAs(@NotNull Offer seenOffer, double acceptableDifferenceInPercent) {
+        if (availableItems.size() != seenOffer.getAvailableItems()
+                                              .size()) {
             return false;
         }
 
         for (OfferItem item : availableItems) {
-            OfferItem sameItem = seenOffer.findItem(item.getProductId());
+            Product sameProduct = item.getProduct();
+
+            if (sameProduct == null) {
+                return false;
+            }
+
+            // Products must have distinct IDs to be recognizable.
+            OfferItem sameItem = seenOffer.findItem(sameProduct.getId());
+
             if (sameItem == null) {
                 return false;
             }
-            if (!sameItem.sameAs(item, delta)) {
+
+            if (!sameItem.sameAs(item, acceptableDifferenceInPercent)) {
                 return false;
             }
         }
@@ -77,13 +77,16 @@ public class Offer {
         return true;
     }
 
+    @Nullable
     private OfferItem findItem(String productId) {
         for (OfferItem item : availableItems) {
-            if (item.getProductId().equals(productId)) {
+            if (item.getProduct()
+                    .getId()
+                    .equals(productId)) {
                 return item;
             }
         }
+
         return null;
     }
-
 }
