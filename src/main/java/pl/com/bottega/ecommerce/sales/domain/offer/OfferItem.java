@@ -21,8 +21,6 @@ public class OfferItem {
     // product
     private String productId;
 
-    private BigDecimal productPrice;
-
     private String productName;
 
     private Date productSnapshotDate;
@@ -33,26 +31,27 @@ public class OfferItem {
 
     private BigDecimal totalCost;
 
-    private String currency;
+    Money money;
 
     // discount
     private String discountCause;
 
     private BigDecimal discount;
 
-    public OfferItem(String productId, BigDecimal productPrice, String productName, Date productSnapshotDate, String productType,
-            int quantity) {
-        this(productId, productPrice, productName, productSnapshotDate, productType, quantity, null, null);
+    public OfferItem(Product product, BigDecimal price) {
+        this(product,1, price,"GBP", null, null);
     }
 
-    public OfferItem(String productId, BigDecimal productPrice, String productName, Date productSnapshotDate, String productType,
-            int quantity, BigDecimal discount, String discountCause) {
-        this.productId = productId;
-        this.productPrice = productPrice;
-        this.productName = productName;
-        this.productSnapshotDate = productSnapshotDate;
-        this.productType = productType;
+    public OfferItem(Product product, int quantity, BigDecimal price, String currency, BigDecimal discount, String discountCause) {
 
+        this.money = new Money();;
+        this.money.setProductPrice(price);
+        this.money.setCurrency(currency);
+        this.money.setProductPrice(price);
+        this.productId = product.getProductId();
+        this.productType = product.getProductType();
+        this.productName = product.getProductName();
+        this.productSnapshotDate = product.getSnapshotDate();
         this.quantity = quantity;
         this.discount = discount;
         this.discountCause = discountCause;
@@ -62,7 +61,7 @@ public class OfferItem {
             discountValue = discountValue.add(discount);
         }
 
-        this.totalCost = productPrice.multiply(new BigDecimal(quantity))
+        this.totalCost = money.getProductPrice().multiply(new BigDecimal(quantity))
                                      .subtract(discountValue);
     }
 
@@ -71,7 +70,7 @@ public class OfferItem {
     }
 
     public BigDecimal getProductPrice() {
-        return productPrice;
+        return money.getProductPrice();
     }
 
     public String getProductName() {
@@ -91,7 +90,7 @@ public class OfferItem {
     }
 
     public String getTotalCostCurrency() {
-        return currency;
+        return money.getCurrency();
     }
 
     public BigDecimal getDiscount() {
@@ -108,7 +107,7 @@ public class OfferItem {
 
     @Override
     public int hashCode() {
-        return Objects.hash(currency, discount, discountCause, productId, productName, productPrice, productSnapshotDate, productType,
+        return Objects.hash(money.getCurrency(), discount, discountCause, productId, productName, money.getProductPrice(), productSnapshotDate, productType,
                 quantity, totalCost);
     }
 
@@ -124,12 +123,12 @@ public class OfferItem {
             return false;
         }
         OfferItem other = (OfferItem) obj;
-        return Objects.equals(currency, other.currency)
+        return Objects.equals(money.getCurrency(), other.money.getCurrency())
                && Objects.equals(discount, other.discount)
                && Objects.equals(discountCause, other.discountCause)
                && Objects.equals(productId, other.productId)
                && Objects.equals(productName, other.productName)
-               && Objects.equals(productPrice, other.productPrice)
+               && Objects.equals(money.getProductPrice(), other.money.getProductPrice())
                && Objects.equals(productSnapshotDate, other.productSnapshotDate)
                && Objects.equals(productType, other.productType)
                && quantity == other.quantity
@@ -138,17 +137,17 @@ public class OfferItem {
 
     /**
      *
-     * @param item
+     *
      * @param delta
      *            acceptable percentage difference
      * @return
      */
     public boolean sameAs(OfferItem other, double delta) {
-        if (productPrice == null) {
-            if (other.productPrice != null) {
+        if (money.getProductPrice() == null) {
+            if (other.money.getProductPrice() != null) {
                 return false;
             }
-        } else if (!productPrice.equals(other.productPrice)) {
+        } else if (!money.getProductPrice().equals(other.money.getProductPrice())) {
             return false;
         }
         if (productName == null) {
